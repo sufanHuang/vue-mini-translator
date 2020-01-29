@@ -1,28 +1,60 @@
+
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class = 'text-center' id="app">
+    <h1>Mini Translator</h1>
+    <h5>Powered by Vue.js</h5>
+    <hr>
+    <div class="row" >
+      <form class="form-inline well"  @submit="formSubmit">
+        <input class = 'form-control' type ='text' v-model="textToTranslate" placeholder="Enter a Word...">
+        <select class="form-control" v-model="language">
+          <option value = "ru">Russian</option>
+          <option value = "zh">Chinese</option>
+          <option value = "es">Spanish</option>
+        </select>
+        <hr>
+        <input class="btn btn-primary" type ='submit' value="translate">
+      </form>
+    </div>
+    <h2 class ='text-danger'> {{translatedText}} </h2>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+    import axios from 'axios'
 
-export default {
-  name: 'app',
-  components: {
-    HelloWorld
-  }
-}
+    export default {
+        name: 'App',
+        data: function() {
+            return{
+                textToTranslate: '',
+                language: '',
+                translatedText: ''
+            }
+        },
+        created(){
+            this.language = 'zh'
+        },
+        methods: {
+            translateText: function(text,language){
+                axios.get('https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20200122T212506Z.be34317ff507f6f7.b3adba3cf5ff64da7f708049efbe54529c11574d&lang='+language+'&text='+text)
+                    .then((response)=>{
+                        this.translatedText = response.data.text[0]
+                        console.log(this.translatedText)
+                    })
+                    .catch(error => console.log(error))
+            },
+            formSubmit: function(e){
+                this.translateText(this.textToTranslate,this.language)
+                e.preventDefault()
+            }
+        }
+    }
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  body {
+    background: darkslategray;
+  }
+
 </style>

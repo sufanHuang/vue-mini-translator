@@ -1,4 +1,5 @@
 # vue-mini-translator
+ A Vue.js translator using Yandex api. Please enter your own api Key.
 
 ## Project setup
 ```
